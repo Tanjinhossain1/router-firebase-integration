@@ -1,8 +1,20 @@
 import React from 'react';
-import useFirebase from '../../hooks/useFirebase';
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { getAuth } from 'firebase/auth';
+import app from '../../firebase.init';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+const auth = getAuth(app)
 const Login = () => {
-    const {googleSingIn} = useFirebase();
+
+    const [signInWithGoogle] = useSignInWithGoogle(auth);
+    let navigate = useNavigate();
+    let location = useLocation();
+    const handleSignInWithGoogle = () => {
+        signInWithGoogle();
+        let from = location.state?.from?.pathname || "/";
+        navigate(from)
+    }
     return (
         <div>
 
@@ -14,7 +26,7 @@ const Login = () => {
                 <br />
                 <input type="submit" value="submit" />
             </form>
-            <button onClick={googleSingIn}>Google Sing In</button>
+            <button onClick={handleSignInWithGoogle}>Google Sing In</button>
 
         </div>
     );
